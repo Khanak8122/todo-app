@@ -1,27 +1,23 @@
-version: '3.8'
-
 services:
-  # Your Node.js app
   app:
-    build: .                  # build from the Dockerfile in this folder
+    build: .
     ports:
-      - "3000:3000"           # laptop:container port mapping
+      - "3000:3000"
     volumes:
-      - .:/app                # sync your local code into the container
-      - /app/node_modules     # but keep the container's node_modules untouched
+      - .:/app
+      - /app/node_modules
     environment:
       - NODE_ENV=development
-      - DB_HOST=db           # "db" is the service name above — Docker resolves it automatically
+      - DB_HOST=db
       - DB_USER=postgres
       - DB_PASSWORD=postgres
       - DB_NAME=todos
+    restart: unless-stopped
     depends_on:
-      - db                   # start db container before app container
+      - db
 
-
-  # Postgres database (replacing the in-memory array)
   db:
-    image: postgres:15-alpine       # pull official postgres image, no Dockerfile needed
+    image: postgres:15-alpine
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -29,8 +25,8 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data   # persist data so it survives restarts
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
 
-# Named volume — this is where Postgres actually stores data on your machine
 volumes:
   pgdata:
