@@ -7,7 +7,7 @@ on:
     branches: [ main ]      # runs when you push to main
   pull_request:
     branches: [ main ]      # runs when you open a PR to main
-    
+
 #Defines tasks/jobs pipeline should perform.
 jobs:
   test:
@@ -86,3 +86,8 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 7
+
+      # Step 9 — build the Docker image to verify Dockerfile is not broken
+      # This doesn't push the image anywhere yet — just proves it builds cleanly
+      - name: Build Docker image
+        run: docker build -t todo-app:${{ github.sha }} .
