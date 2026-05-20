@@ -43,7 +43,7 @@ app.post('/todos',async (req,res)=>{
     const result=await pool.query('INSERT INTO todos (title) VALUES ($1) RETURNING *',
         [title]
     );
-    res.status(200).json(result.rows[0]);
+    res.status(201).json(result.rows[0]);
 });
 
 //PUT-Mark a  todo as done/undone
