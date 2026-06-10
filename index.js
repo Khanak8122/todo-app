@@ -39,7 +39,7 @@ app.post('/todos', async (req, res) => {
     'INSERT INTO todos (title) VALUES ($1) RETURNING *',
     [title]
   );
-  res.status(200).json(result.rows[0]);
+  res.status(201).json(result.rows[0]);
 });
 
 // PUT — toggle done
