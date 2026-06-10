@@ -75,7 +75,6 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
 
-    # Only push image on push to master — not on pull requests
     if: github.event_name == 'push'
 
     steps:
@@ -109,3 +108,21 @@ jobs:
           # Cache layers between builds — much faster rebuilds
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  deploy:
+    needs: docker           # runs only after image is pushed to Docker Hub
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            cd ~/todo-app
+            docker-compose pull        # pull latest image from Docker Hub
+            docker-compose up -d       # restart with new image
+            docker image prune -f      # clean up old images
