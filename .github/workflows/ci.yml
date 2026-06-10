@@ -125,5 +125,6 @@ jobs:
           script: |
             cd ~/todo-app
             docker compose pull        # pull latest image from Docker Hub
+            docker compose down
             docker compose up -d       # restart with new image
             docker image prune -f      # clean up old images
