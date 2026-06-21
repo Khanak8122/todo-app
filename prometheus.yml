@@ -1,0 +1,7 @@
+global:
+  scrape_interval: 5s     # check metrics every 5 seconds
+
+scrape_configs:
+  - job_name: 'todo-app'
+    static_configs:
+      - targets: ['app:3000']   # "app" is the service name from docker-compose
